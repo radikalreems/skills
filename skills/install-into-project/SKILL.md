@@ -1,81 +1,63 @@
 ---
 name: install-into-project
-description: >
-  Wire radikalreems/skills into another Cursor project so GitHub stays
-  the source of truth. Use when the user wants shared skills in a repo,
-  a workspaceOpen sync hook, or to install radikalreems skills without
-  copying SKILL.md files into the project.
+description: Install the radikalreems catalog into this project.
+disable-model-invocation: true
 ---
 
 # Install into project
 
-Playbook for wiring the radikalreems catalog into a target Cursor project. GitHub stays the source of truth. Project-owned skills stay in the target's `.cursor/skills/`. Shared skills live in the target's `.cursor/radikalreems/` and are never the source of truth.
-
-**Chicken-and-egg.** This skill must already be in context: the catalog repo is open, this folder is copied to `~/.cursor/skills/install-into-project`, or the user pasted the playbook. After install, later updates come from GitHub via the hook. Skip re-running this skill to refresh vendor skills.
-
-## When to use
-
-The user wants shared radikalreems skills in another repo, a `workspaceOpen` sync hook, or GitHub-synced skills instead of copied `SKILL.md` files.
-
 ## What this sets up
 
 ```
-<target>/
-├── .gitignore                      # contains .cursor/radikalreems/
+<project>/
+├── .gitignore                         # ignore .cursor/skills/radikalreems/
 └── .cursor/
-    ├── hooks.json                  # workspaceOpen -> sync script
+    ├── hooks.json                     # workspaceOpen → sync script
     ├── hooks/
     │   └── sync-radikalreems-skills.sh
-    ├── skills/                     # project-owned only
-    └── radikalreems/               # vendor dir, gitignored
-        ├── .cursor-plugin/
-        │   └── plugin.json
-        ├── .src/                   # shallow clone of radikalreems/skills
-        └── skills/                 # published catalog
+    └── skills/
+        ├── my-project-skill/          # yours, committed
+        │   └── SKILL.md
+        └── radikalreems/              # from GitHub, gitignored
+            └── unslop/
+                └── SKILL.md
 ```
 
-Cursor loads vendor skills because the vendor dir is a plugin (`plugin.json` + `skills/`) and the hook prints `{ "pluginPaths": ["<absolute path to .cursor/radikalreems>"] }`. Cursor does not load `.cursor/radikalreems/**` as project skills.
+Shared catalog lands in `.cursor/skills/radikalreems/`. Project-only skills stay beside it, not inside it. Gitignore only `.cursor/skills/radikalreems/`, not all of `.cursor/skills/`.
+
+The hook shallow-fetches `https://github.com/radikalreems/skills` and rsyncs that repo's `skills/` tree into `.cursor/skills/radikalreems/`. Cursor loads each folder there that contains `SKILL.md`.
 
 ## Prerequisites
 
 - `git` on PATH
 - `bash` (Git Bash on Windows)
 - Network to `https://github.com/radikalreems/skills.git`
-- Target is a Cursor workspace
-- User wants GitHub sync, not a symlink to a local clone
 - `rsync` preferred; the script falls back to `cp`
 
 ## Steps
 
-Check, then write. Ask before changing an existing `.cursor/hooks.json` or an unexpected vendor dir. An expected vendor dir has `.cursor-plugin/plugin.json` with `"name": "radikalreems-skills"`. Leave `.cursor/skills/` untouched aside from creating the empty directory.
+Check, then write. Ask before changing an existing `.cursor/hooks.json`. Publish only into `.cursor/skills/radikalreems/`. Leave every other folder under `.cursor/skills/` as it is.
+
+If `$TARGET/.cursor/radikalreems` exists (old plugin vendor), ask, then delete it and drop `.cursor/radikalreems/` from `.gitignore`.
 
 ### 1. Locate the target root
 
-The target is the workspace root of the project being wired.
+The target is this workspace's root.
 
 If that root contains both `skills/install-into-project/SKILL.md` and an `AGENTS.md` that says skills live in `skills/`, this workspace is the catalog. Ask for the target path.
 
-Done when `TARGET` is an absolute path to that project root.
+Done when `TARGET` is an absolute path to the project root.
 
 ### 2. Create directories
 
 ```
-.cursor/skills/
 .cursor/hooks/
-.cursor/radikalreems/.cursor-plugin/
+.cursor/skills/
 ```
 
-Put vendor files only under `.cursor/radikalreems/` and `.cursor/hooks/`.
+Done when both exist.
 
-Done when those three directories exist.
-
-### 3. Write plugin.json
-
-Write [Canonical file contents](#canonical-file-contents) `plugin.json` to `$TARGET/.cursor/radikalreems/.cursor-plugin/plugin.json`.
-
-Done when that file matches the canonical JSON.
-
-### 4. Write the sync script
+### 3. Write the sync script
 
 This skill's folder is the directory that contains this `SKILL.md` (catalog: `skills/install-into-project/`; user skills: `~/.cursor/skills/install-into-project/`).
 
@@ -85,7 +67,7 @@ Copy `$SKILL_DIR/assets/sync-radikalreems-skills.sh` to `$TARGET/.cursor/hooks/s
 
 Done when the hook script matches the canonical script and is executable.
 
-### 5. Merge hooks.json
+### 4. Merge hooks.json
 
 Path: `$TARGET/.cursor/hooks.json`. Command paths are relative to the target root.
 
@@ -121,13 +103,13 @@ with open(path, "w", encoding="utf-8", newline="\n") as f:
 
 Done when `hooks.json` is valid JSON and contains that `workspaceOpen` command, and every previously present hook is still present.
 
-### 6. Update gitignore
+### 5. Update gitignore
 
-Ensure `$TARGET/.gitignore` contains the line `.cursor/radikalreems/`. Create the file if needed. Append the line if missing. Leave other `.cursor/` paths tracked.
+Ensure `$TARGET/.gitignore` contains the line `.cursor/skills/radikalreems/`. Create the file if needed. Append the line if missing.
 
-Done when that line is present and `.cursor/` as a whole is not ignored.
+Done when that line is present and `.cursor/skills/` as a whole is not ignored.
 
-### 7. Run sync once
+### 6. Run sync once
 
 From `$TARGET`, with stderr visible:
 
@@ -135,38 +117,21 @@ From `$TARGET`, with stderr visible:
 bash .cursor/hooks/sync-radikalreems-skills.sh
 ```
 
-Stdout must be a single JSON object with `pluginPaths` pointing at `$TARGET/.cursor/radikalreems`. A non-zero exit with that JSON means stale vendor skills are still loadable; tell the user the stderr reason. A non-zero exit with no JSON means the first sync failed and vendor skills are missing.
+Stdout is `{}`. A non-zero exit means the fetch failed; skill folders already under `.cursor/skills/radikalreems/` stay on disk. Report the stderr reason.
 
-Done when `.cursor/radikalreems/skills/` contains skill folders, or the failure and fallback have been reported.
+Done when `.cursor/skills/radikalreems/` contains catalog skill folders (for example `unslop/`), or the failure has been reported.
 
-### 8. Verify
+### 7. Verify
 
-- `ls "$TARGET/.cursor/radikalreems/skills"` lists catalog skill folders
+- `ls "$TARGET/.cursor/skills/radikalreems"` lists catalog skill folders and may list `.src`
 - `hooks.json` includes the `workspaceOpen` entry above
-- `git check-ignore -q .cursor/radikalreems` succeeds (vendor dir ignored)
-- `git status` does not stage `.cursor/radikalreems/`
-- Name collisions: folder names that exist in both `.cursor/skills/` and `.cursor/radikalreems/skills/`. Mention them in the wrap-up. Leave both folders as they are.
+- `git check-ignore -q .cursor/skills/radikalreems` succeeds
+- `git status` does not stage `.cursor/skills/radikalreems/`
+- Name collisions: folder names that exist both as `$TARGET/.cursor/skills/<name>/` and `$TARGET/.cursor/skills/radikalreems/<name>/`. Mention them in the wrap-up. Leave both folders as they are.
 
 Done when every check has a recorded result.
 
 ## Canonical file contents
-
-### plugin.json
-
-`$TARGET/.cursor/radikalreems/.cursor-plugin/plugin.json`
-
-```json
-{
-  "name": "radikalreems-skills",
-  "version": "0.1.0",
-  "description": "Shared skills synced from radikalreems/skills",
-  "author": { "name": "radikalreems" },
-  "repository": "https://github.com/radikalreems/skills",
-  "skills": "./skills"
-}
-```
-
-The sync script also writes this file so a machine that only has the committed hook still gets a plugin wrapper.
 
 ### hooks.json
 
@@ -190,10 +155,12 @@ The sync script also writes this file so a machine that only has the committed h
 
 `$TARGET/.cursor/hooks/sync-radikalreems-skills.sh`
 
+Clone cache lives at `.cursor/skills/radikalreems/.src` (gitignored with the catalog). Publish copies `$SRC/skills/` onto `.cursor/skills/radikalreems/` and leaves `.src` in place. The script never writes outside that folder.
+
 ```bash
 #!/usr/bin/env bash
-# Sync radikalreems/skills into this project's vendor plugin dir.
-# Cursor workspaceOpen hook: JSON on stdout, logs on stderr.
+# Sync radikalreems/skills into .cursor/skills/radikalreems.
+# workspaceOpen hook: logs on stderr, "{}" on stdout.
 set -euo pipefail
 
 REPO_URL="https://github.com/radikalreems/skills.git"
@@ -201,59 +168,21 @@ REF="${RADIKALREEMS_SKILLS_REF:-main}"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
-VENDOR_DIR="$PROJECT_ROOT/.cursor/radikalreems"
-SRC_DIR="$VENDOR_DIR/.src"
-SKILLS_DIR="$VENDOR_DIR/skills"
-PLUGIN_JSON="$VENDOR_DIR/.cursor-plugin/plugin.json"
+DEST_DIR="$PROJECT_ROOT/.cursor/skills/radikalreems"
+SRC_DIR="$DEST_DIR/.src"
 
 log() {
   printf 'sync-radikalreems-skills: %s\n' "$*" >&2
 }
 
-plugin_path() {
-  if command -v cygpath >/dev/null 2>&1; then
-    cygpath -aw "$VENDOR_DIR"
-  else
-    printf '%s' "$VENDOR_DIR"
-  fi
-}
-
-emit_plugin_paths() {
-  local escaped
-  escaped="$(printf '%s' "$(plugin_path)" | sed 's/\\/\\\\/g; s/"/\\"/g')"
-  printf '{"pluginPaths":["%s"]}\n' "$escaped"
-}
-
-vendor_usable() {
-  local d
-  for d in "$SKILLS_DIR"/*/; do
-    if [ -d "$d" ]; then
-      return 0
-    fi
-  done
-  return 1
+emit() {
+  printf '{}\n'
 }
 
 fail() {
   log "$1"
-  if vendor_usable; then
-    emit_plugin_paths
-  fi
+  emit
   exit 1
-}
-
-write_plugin_json() {
-  mkdir -p "$(dirname "$PLUGIN_JSON")"
-  cat > "$PLUGIN_JSON" <<'EOF'
-{
-  "name": "radikalreems-skills",
-  "version": "0.1.0",
-  "description": "Shared skills synced from radikalreems/skills",
-  "author": { "name": "radikalreems" },
-  "repository": "https://github.com/radikalreems/skills",
-  "skills": "./skills"
-}
-EOF
 }
 
 publish_skills() {
@@ -264,16 +193,17 @@ publish_skills() {
     fail "clone has no skills/ directory"
   fi
 
-  mkdir -p "$SKILLS_DIR"
+  mkdir -p "$DEST_DIR"
 
   if command -v rsync >/dev/null 2>&1; then
-    rsync -a --delete "$src/" "$SKILLS_DIR/" >&2
+    rsync -a --delete --exclude '.src' "$src/" "$DEST_DIR/" >&2
     return
   fi
 
-  for dest_skill in "$SKILLS_DIR"/*/; do
+  for dest_skill in "$DEST_DIR"/*/; do
     [ -d "$dest_skill" ] || continue
     name="$(basename "$dest_skill")"
+    [ "$name" = ".src" ] && continue
     if [ ! -d "$src/$name" ]; then
       rm -rf "$dest_skill"
     fi
@@ -282,8 +212,8 @@ publish_skills() {
   for src_skill in "$src"/*/; do
     [ -d "$src_skill" ] || continue
     name="$(basename "$src_skill")"
-    rm -rf "$SKILLS_DIR/$name"
-    cp -R "$src_skill" "$SKILLS_DIR/$name"
+    rm -rf "$DEST_DIR/$name"
+    cp -R "$src_skill" "$DEST_DIR/$name"
   done
 }
 
@@ -297,7 +227,7 @@ if [ -e "$SRC_DIR" ] && [ ! -d "$SRC_DIR/.git" ]; then
 fi
 
 if [ ! -d "$SRC_DIR/.git" ]; then
-  mkdir -p "$VENDOR_DIR"
+  mkdir -p "$DEST_DIR"
   if ! git clone --depth 1 --branch "$REF" --single-branch "$REPO_URL" "$SRC_DIR" >&2; then
     fail "git clone failed (network or ref '$REF')"
   fi
@@ -311,52 +241,36 @@ else
 fi
 
 publish_skills
-write_plugin_json
-
-if ! vendor_usable; then
-  fail "publish produced no skill folders"
-fi
-
-emit_plugin_paths
+emit
 ```
-
-Sync behavior the script already implements:
-
-- Source: `https://github.com/radikalreems/skills.git`, ref `${RADIKALREEMS_SKILLS_REF:-main}`
-- First run: `git clone --depth 1 --branch "$REF" --single-branch` into `.cursor/radikalreems/.src`
-- Later runs: `git fetch --depth 1 origin "$REF"` then `checkout FETCH_HEAD`
-- Publish with `rsync -a --delete` from `.src/skills/` to `.cursor/radikalreems/skills/`, or the `cp` path that deletes stale skill folders
-- Missing `git` or a failed network call: non-zero exit, short stderr message, `pluginPaths` only when published skills already exist
-- Success and stale fallback: only the JSON object on stdout
-- Hook timeout is 60 seconds; the script stays on a shallow fetch
-- The script never deletes the whole vendor dir
 
 ## Wrap-up for the user
 
 Tell the user, in this order:
 
-1. Run **Developer: Reload Window**, then check **Customize → Skills / Plugins** for `radikalreems-skills`.
-2. Track in git: `.cursor/hooks.json`, `.cursor/hooks/sync-radikalreems-skills.sh`, and the gitignore line. Leave the vendor dir untracked.
+1. Run **Developer: Reload Window**, then check **Customize → Skills** for catalog skills such as `unslop`.
+2. Track in git: `.cursor/hooks.json`, `.cursor/hooks/sync-radikalreems-skills.sh`, and the gitignore line. Leave `.cursor/skills/radikalreems/` untracked.
 3. Updates: push to `radikalreems/skills` on GitHub. The next local workspace open fetches `main` (or the pinned ref).
 4. Pin a ref by setting `RADIKALREEMS_SKILLS_REF` in the environment Cursor inherits (`RADIKALREEMS_SKILLS_REF=some-branch`).
-5. Local Cursor auto-syncs on open. Cloud Agents do not run `workspaceOpen`. Cloud Agents will not see vendor skills unless a different distribution path is used later.
-6. Name collisions from step 8, if any.
+5. Local Cursor auto-syncs on open. Cloud Agents do not run `workspaceOpen`, so they will not see these skills unless a different distribution path is used later.
+6. Name collisions from step 7, if any.
 7. Uninstall:
    - Remove the `workspaceOpen` entry whose command is `.cursor/hooks/sync-radikalreems-skills.sh`
    - Delete `.cursor/hooks/sync-radikalreems-skills.sh` if unused
-   - Delete `.cursor/radikalreems/`
+   - Delete `.cursor/skills/radikalreems/`
    - Remove the gitignore line
    - Reload window
 
 ## Do not
 
-Load shared skills through the vendor plugin path in this playbook.
+Publish the catalog only into `.cursor/skills/radikalreems/`.
 
-- Symlink the vendor dir to a home clone of the catalog
+- Write a `plugin.json` or print `pluginPaths`
+- Sync onto `.cursor/skills/` itself
+- Symlink `radikalreems/` to a home clone of the catalog
 - Use `npx skills add` as the main path
-- Copy catalog `SKILL.md` files into `.cursor/skills/`
-- Sync into `.cursor/skills/` or `.cursor/radikalskills/`
-- Delete anything under `.cursor/skills/`
-- Commit the vendor checkout
+- Copy catalog `SKILL.md` files into `.cursor/skills/<name>/`
+- Delete anything under `.cursor/skills/` except inside `radikalreems/` during sync
+- Commit `.cursor/skills/radikalreems/`
 - Put secrets in the sync script
 - Rename project-local skills to resolve collisions
