@@ -66,21 +66,11 @@ A non-zero exit means the fetch failed. Skill folders already under `.cursor/ski
 
 Done when `.cursor/skills/radikalreems/` contains catalog skill folders (for example `unslop/`), or the failure has been reported.
 
-### 4. Drop leftover open-hook files
-
-An older install used `workspaceOpen`. Remove that path so opening the project does not sync.
-
-- Delete `$TARGET/.cursor/hooks/sync-radikalreems-skills.sh` if it exists.
-- If `$TARGET/.cursor/hooks.json` exists, remove every `workspaceOpen` entry whose `command` is `.cursor/hooks/sync-radikalreems-skills.sh`. Leave every other hook. If `workspaceOpen` is then empty, remove that key. Write the file back.
-
-Done when that command is absent from `hooks.json` (or the file is absent) and the hook script is absent.
-
-### 5. Verify
+### 4. Verify
 
 - `ls "$TARGET/.cursor/skills/radikalreems"` lists only catalog skill folders (no `.src`, no README)
 - `git check-ignore -q .cursor/skills/radikalreems` succeeds
 - `git status` does not stage `.cursor/skills/radikalreems/`
-- `$TARGET/.cursor/hooks.json` has no command `.cursor/hooks/sync-radikalreems-skills.sh`
 - Name collisions: folder names that exist both as `$TARGET/.cursor/skills/<name>/` and `$TARGET/.cursor/skills/radikalreems/<name>/`. Mention them in the wrap-up. Leave both folders as they are.
 
 Done when every check has a recorded result.
@@ -92,7 +82,7 @@ Tell the user, in this order:
 1. Reload so Cursor picks up the skills. Command Palette is Ctrl+Shift+P (Cmd+Shift+P on Mac). Run **Developer: Reload Window**. Then check **Customize → Skills** for catalog skills such as `unslop`.
 2. The catalog stays as this run left it. Run this skill again to refresh from GitHub.
 3. To pin a branch or tag for a run, set `RADIKALREEMS_SKILLS_REF` in the same shell that runs the script.
-4. Name collisions from step 5, if any.
+4. Name collisions from step 4, if any.
 5. Uninstall:
    - Delete `.cursor/skills/radikalreems/`
    - Remove the gitignore line
