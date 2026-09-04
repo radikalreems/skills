@@ -26,7 +26,7 @@ disable-model-invocation: true
 
 Shared catalog lands in `.cursor/skills/radikalreems/`. Project-only skills stay beside it, not inside it. Gitignore only `.cursor/skills/radikalreems/`, not all of `.cursor/skills/`.
 
-The hook shallow-fetches `https://github.com/radikalreems/skills` and rsyncs that repo's `skills/` tree into `.cursor/skills/radikalreems/`. Cursor loads each folder there that contains `SKILL.md`.
+The hook shallow-clones `https://github.com/radikalreems/skills` into a temp dir and copies only that repo's `skills/` tree into `.cursor/skills/radikalreems/`. README, `.cursor/`, and the rest of the repo stay out. Cursor loads each folder there that contains `SKILL.md`.
 
 ## Prerequisites
 
@@ -99,7 +99,7 @@ Done when `.cursor/skills/radikalreems/` contains catalog skill folders (for exa
 
 ### 7. Verify
 
-- `ls "$TARGET/.cursor/skills/radikalreems"` lists catalog skill folders and may list `.src`
+- `ls "$TARGET/.cursor/skills/radikalreems"` lists only catalog skill folders (no `.src`, no README)
 - `hooks.json` includes the `workspaceOpen` entry above
 - `git check-ignore -q .cursor/skills/radikalreems` succeeds
 - `git status` does not stage `.cursor/skills/radikalreems/`

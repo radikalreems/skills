@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Sync radikalreems/skills into .cursor/skills/radikalreems.
+# Sync radikalreems/skills/skills into .cursor/skills/radikalreems.
 # workspaceOpen hook: logs on stderr, "{}" on stdout.
 set -euo pipefail
 
@@ -9,7 +9,7 @@ REF="${RADIKALREEMS_SKILLS_REF:-main}"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 DEST_DIR="$PROJECT_ROOT/.cursor/skills/radikalreems"
-SRC_DIR="$DEST_DIR/.src"
+WORKDIR=""
 
 log() {
   printf 'sync-radikalreems-skills: %s\n' "$*" >&2
@@ -19,14 +19,22 @@ emit() {
   printf '{}\n'
 }
 
+cleanup() {
+  if [ -n "$WORKDIR" ] && [ -d "$WORKDIR" ]; then
+    rm -rf "$WORKDIR"
+  fi
+}
+
 fail() {
   log "$1"
   emit
   exit 1
 }
 
+trap cleanup EXIT
+
 publish_skills() {
-  local src="$SRC_DIR/skills"
+  local src="$1"
   local name dest_skill src_skill
 
   if [ ! -d "$src" ]; then
@@ -36,14 +44,13 @@ publish_skills() {
   mkdir -p "$DEST_DIR"
 
   if command -v rsync >/dev/null 2>&1; then
-    rsync -a --delete --exclude '.src' "$src/" "$DEST_DIR/" >&2
+    rsync -a --delete "$src/" "$DEST_DIR/" >&2
     return
   fi
 
   for dest_skill in "$DEST_DIR"/*/; do
     [ -d "$dest_skill" ] || continue
     name="$(basename "$dest_skill")"
-    [ "$name" = ".src" ] && continue
     if [ ! -d "$src/$name" ]; then
       rm -rf "$dest_skill"
     fi
@@ -61,24 +68,10 @@ if ! command -v git >/dev/null 2>&1; then
   fail "git is required"
 fi
 
-if [ -e "$SRC_DIR" ] && [ ! -d "$SRC_DIR/.git" ]; then
-  log "removing incomplete .src"
-  rm -rf "$SRC_DIR"
+WORKDIR="$(mktemp -d "${TMPDIR:-/tmp}/radikalreems-skills.XXXXXX")"
+if ! git clone --depth 1 --branch "$REF" --single-branch "$REPO_URL" "$WORKDIR/repo" >&2; then
+  fail "git clone failed (network or ref '$REF')"
 fi
 
-if [ ! -d "$SRC_DIR/.git" ]; then
-  mkdir -p "$DEST_DIR"
-  if ! git clone --depth 1 --branch "$REF" --single-branch "$REPO_URL" "$SRC_DIR" >&2; then
-    fail "git clone failed (network or ref '$REF')"
-  fi
-else
-  if ! git -C "$SRC_DIR" fetch --depth 1 origin "$REF" >&2; then
-    fail "git fetch failed (network or ref '$REF')"
-  fi
-  if ! git -C "$SRC_DIR" checkout FETCH_HEAD >&2; then
-    fail "git checkout FETCH_HEAD failed"
-  fi
-fi
-
-publish_skills
+publish_skills "$WORKDIR/repo/skills"
 emit
