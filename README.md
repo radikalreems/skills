@@ -1,8 +1,8 @@
 # Skills
 
-A collection of Cursor agent skills.
+Each skill is a folder under `skills/` with a `SKILL.md`. That folder is the library.
 
-Each skill is a folder under `skills/` with a `SKILL.md` that teaches the agent how to do a specific task.
+`.cursor/skills/` only loads skills this repo needs while you work on it. `unslop` and `writing-for-agents` are in there. The rest of the library is not.
 
 ## Layout
 
@@ -10,6 +10,7 @@ Each skill is a folder under `skills/` with a `SKILL.md` that teaches the agent 
 .
 ├── README.md
 ├── AGENTS.md
+├── .cursor/skills/   # only skills this repo needs
 └── skills/
     └── skill-name/
         ├── SKILL.md
@@ -18,17 +19,19 @@ Each skill is a folder under `skills/` with a `SKILL.md` that teaches the agent 
 
 ## Using a skill
 
-Point Cursor at a skill by name, or copy/symlink a skill folder into one of these locations:
+Name the skill in Cursor, or copy/symlink its folder into one of these:
 
 | Scope | Path |
 | --- | --- |
 | Personal (all projects) | `~/.cursor/skills/skill-name/` |
-| Project (this repo or another) | `.cursor/skills/skill-name/` |
+| Another project | `<that-repo>/.cursor/skills/skill-name/` |
 
-Do not put skills in `~/.cursor/skills-cursor/`. That directory is reserved for Cursor's built-in skills.
+Skip `~/.cursor/skills-cursor/`. Cursor keeps its built-in skills there.
 
 ## Adding a skill
 
 1. Create `skills/<skill-name>/SKILL.md`.
 2. Use lowercase letters, numbers, and hyphens for `<skill-name>`.
 3. Follow the frontmatter and authoring rules in [AGENTS.md](AGENTS.md).
+
+Add it to `.cursor/skills/` only if working on this repo should load it.
