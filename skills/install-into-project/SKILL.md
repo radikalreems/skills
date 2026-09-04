@@ -111,13 +111,11 @@ Done when every check has a recorded result.
 
 Tell the user, in this order:
 
-1. Run **Developer: Reload Window**, then check **Customize → Skills** for catalog skills such as `unslop`.
-2. Track in git: `.cursor/hooks.json`, `.cursor/hooks/sync-radikalreems-skills.sh`, and the gitignore line. Leave `.cursor/skills/radikalreems/` untracked.
-3. Updates: push to `radikalreems/skills` on GitHub. The next local workspace open fetches `main` (or the pinned ref).
-4. Pin a ref by setting `RADIKALREEMS_SKILLS_REF` in the environment Cursor inherits (`RADIKALREEMS_SKILLS_REF=some-branch`).
-5. Local Cursor auto-syncs on open. Cloud Agents do not run `workspaceOpen`, so they will not see these skills unless a different distribution path is used later.
-6. Name collisions from step 7, if any.
-7. Uninstall:
+1. Reload so Cursor picks up the new skills. Command Palette is Ctrl+Shift+P (Cmd+Shift+P on Mac). Run **Developer: Reload Window**. Then check **Customize → Skills** for catalog skills such as `unslop`.
+2. Version setting is optional. The hook tracks `main` unless they want to stick on a branch or tag. Set a user environment variable `RADIKALREEMS_SKILLS_REF` to that name, then quit Cursor fully and reopen so the app starts with the new value. On Windows, search **Edit environment variables for your account**. On Mac, export it in the shell that launches Cursor, or use `launchctl setenv` if they open Cursor from the Dock. A variable set only in a random terminal does not reach the hook.
+3. Local Cursor auto-syncs on open. Cloud Agents do not run `workspaceOpen`, so they will not see these skills unless a different distribution path is used later.
+4. Name collisions from step 7, if any.
+5. Uninstall:
    - Remove the `workspaceOpen` entry whose command is `.cursor/hooks/sync-radikalreems-skills.sh`
    - Delete `.cursor/hooks/sync-radikalreems-skills.sh` if unused
    - Delete `.cursor/skills/radikalreems/`
