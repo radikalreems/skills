@@ -1,12 +1,13 @@
 # Agent instructions
 
-This repo is a library of Cursor agent skills. Skills live in `skills/`, not at the repo root.
+This repo is a library of Cursor agent skills. Catalog skills live in `skills/`. The hook that installs this library into other projects copies only that folder.
 
 ## Repo map
 
 - `README.md` — human-facing overview and how to install/use skills.
 - `AGENTS.md` — this file. Follow it when adding, editing, or applying skills.
-- `skills/<skill-name>/` — one folder per skill. The folder name should match the skill `name`.
+- `skills/<skill-name>/` — one folder per catalog skill. The folder name should match the skill `name`.
+- `install-into-project/` — playbook that wires this catalog into another project. Stay out of `skills/` so the sync hook does not ship it. Reach it when installing shared skills into a target repo.
 
 ## Skill layout
 
