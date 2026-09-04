@@ -1,22 +1,17 @@
 #!/usr/bin/env bash
-# Sync radikalreems/skills/skills into .cursor/skills/radikalreems.
-# workspaceOpen hook: logs on stderr, "{}" on stdout.
+# Copy radikalreems/skills/skills into .cursor/skills/radikalreems.
+# Run from the project root.
 set -euo pipefail
 
 REPO_URL="https://github.com/radikalreems/skills.git"
 REF="${RADIKALREEMS_SKILLS_REF:-main}"
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+PROJECT_ROOT="$(pwd)"
 DEST_DIR="$PROJECT_ROOT/.cursor/skills/radikalreems"
 WORKDIR=""
 
 log() {
   printf 'sync-radikalreems-skills: %s\n' "$*" >&2
-}
-
-emit() {
-  printf '{}\n'
 }
 
 cleanup() {
@@ -27,7 +22,6 @@ cleanup() {
 
 fail() {
   log "$1"
-  emit
   exit 1
 }
 
@@ -64,6 +58,10 @@ publish_skills() {
   done
 }
 
+if [ ! -d "$PROJECT_ROOT/.cursor/skills/sync-rr-skills" ]; then
+  fail "run from the project root (missing .cursor/skills/sync-rr-skills)"
+fi
+
 if ! command -v git >/dev/null 2>&1; then
   fail "git is required"
 fi
@@ -74,4 +72,3 @@ if ! git clone --depth 1 --branch "$REF" --single-branch "$REPO_URL" "$WORKDIR/r
 fi
 
 publish_skills "$WORKDIR/repo/skills"
-emit

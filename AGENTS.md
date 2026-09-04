@@ -1,13 +1,13 @@
 # Agent instructions
 
-This repo is a library of Cursor agent skills. Catalog skills live in `skills/`. The hook that installs this library into other projects copies only that folder.
+This repo is a library of Cursor agent skills. Catalog skills live in `skills/`. The sync skill copies only that folder into other projects.
 
 ## Repo map
 
 - `README.md` — human-facing overview and how to install/use skills.
 - `AGENTS.md` — this file. Follow it when adding, editing, or applying skills.
 - `skills/<skill-name>/` — one folder per catalog skill. The folder name should match the skill `name`.
-- `install-into-project/` — playbook that wires this catalog into another project. Stay out of `skills/` so the sync hook does not ship it. Reach it when installing shared skills into a target repo.
+- `sync-rr-skills/` — playbook that copies this catalog into another project. Stay out of `skills/`. It is the folder you copy into a target repo, not a catalog skill. Reach it when installing or refreshing shared skills in a target repo.
 
 ## Skill layout
 
