@@ -60,6 +60,7 @@ disable-model-invocation: true
 3. Add `agents/openai.yaml`. Set `policy.allow_implicit_invocation: false` when the skill is user-invoked.
 4. Add sibling files or scripts only when they earn their keep.
 5. Check that the description includes trigger terms and that links are one level deep.
+6. Add a copy under `.agents/skills/` only if working on this repo should load the skill.
 
 ## What not to do
 

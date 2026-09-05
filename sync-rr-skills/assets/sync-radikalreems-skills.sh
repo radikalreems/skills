@@ -59,8 +59,8 @@ publish_skills() {
   done
 }
 
-if [ ! -d "$PROJECT_ROOT/.cursor/skills/sync-rr-skills" ]; then
-  fail "run from the project root (missing .cursor/skills/sync-rr-skills)"
+if [ ! -d "$PROJECT_ROOT/.agents/skills/sync-rr-skills" ]; then
+  fail "run from the project root (missing .agents/skills/sync-rr-skills)"
 fi
 
 if ! command -v git >/dev/null 2>&1; then

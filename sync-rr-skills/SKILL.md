@@ -13,22 +13,20 @@ disable-model-invocation: true
 ├── .gitignore                         # ignore radikalreems catalog copies
 ├── .agents/
 │   └── skills/
+│       ├── sync-rr-skills/            # this skill, already present
+│       ├── my-project-skill/          # yours, committed
+│       │   └── SKILL.md
 │       └── radikalreems/              # from GitHub, gitignored
 │           └── unslop/
 │               └── SKILL.md
-├── .claude/                           # second copy only if this folder already exists
-│   └── skills/
-│       └── radikalreems/
-└── .cursor/
+└── .claude/                           # second catalog copy only if this folder already exists
     └── skills/
-        ├── sync-rr-skills/            # this skill, already present
-        └── my-project-skill/          # yours, committed
-            └── SKILL.md
+        └── radikalreems/
 ```
 
 Shared catalog always lands in `.agents/skills/radikalreems/`. Create `.agents/` if it is missing. If `$TARGET/.claude` is already a directory, write the same tree to `.claude/skills/radikalreems/`. Do not create `.claude/`. Project-only skills stay outside `radikalreems/`. Gitignore only those `radikalreems/` copies, not all of `.agents/skills/` or `.claude/skills/`.
 
-The script shallow-clones `https://github.com/radikalreems/skills` into a temp dir and copies only that repo's `skills/` tree into each dest. README, `.cursor/`, and the rest of the repo stay out. Cursor and Codex load `.agents/skills/`. Claude Code loads `.claude/skills/`.
+The script shallow-clones `https://github.com/radikalreems/skills` into a temp dir and copies only that repo's `skills/` tree into each dest. README and the rest of the repo stay out. Cursor and Codex load `.agents/skills/`. Claude Code loads `.claude/skills/`.
 
 The catalog updates only when this skill runs.
 
@@ -41,13 +39,13 @@ The catalog updates only when this skill runs.
 
 ## Steps
 
-Check, then write. Publish only into the `radikalreems/` dests above. Leave every other folder under `.agents/skills/`, `.claude/skills/`, and `.cursor/skills/` as it is.
+Check, then write. Publish only into the `radikalreems/` dests above. Leave every other folder under `.agents/skills/` and `.claude/skills/` as it is.
 
 Run the asset script. Do not rewrite it.
 
 ### 1. Locate the target root
 
-The target is this workspace's root. `$SKILL_DIR` is `$TARGET/.cursor/skills/sync-rr-skills`. That folder is already here (this skill).
+The target is this workspace's root. `$SKILL_DIR` is `$TARGET/.agents/skills/sync-rr-skills`. That folder is already here (this skill).
 
 Done when `TARGET` is the workspace root and `$SKILL_DIR/assets/sync-radikalreems-skills.sh` exists.
 
@@ -80,7 +78,7 @@ Done when `.agents/skills/radikalreems/` contains catalog skill folders (for exa
 - `git check-ignore -q .agents/skills/radikalreems` succeeds
 - If the Claude dest was written, `git check-ignore -q .claude/skills/radikalreems` succeeds
 - `git status` does not stage those dests
-- Name collisions: folder names that exist both as `$TARGET/.agents/skills/<name>/` and `$TARGET/.agents/skills/radikalreems/<name>/`, or the same pair under `.claude/skills/` or `.cursor/skills/`. Mention them in the wrap-up. Leave both folders as they are.
+- Name collisions: folder names that exist both as `$TARGET/.agents/skills/<name>/` and `$TARGET/.agents/skills/radikalreems/<name>/`, or the same pair under `.claude/skills/`. Mention them in the wrap-up. Leave both folders as they are.
 
 Done when every check has a recorded result.
 
@@ -96,5 +94,5 @@ Tell the user, in this order:
    - Delete `.agents/skills/radikalreems/`
    - Delete `.claude/skills/radikalreems/` if it exists
    - Remove the gitignore lines
-   - Delete `.cursor/skills/sync-rr-skills/` if they no longer want the skill
+   - Delete `.agents/skills/sync-rr-skills/` if they no longer want the skill
    - Reload window
