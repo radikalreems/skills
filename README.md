@@ -2,6 +2,17 @@
 
 A skill is a folder with a `SKILL.md` that tells an agent how to do one job. [`skills/`](skills/) is the full catalog.
 
+## Catalog
+
+- [`grill-me`](skills/grill-me/). Starts a relentless interview to sharpen a plan. Calls `grilling`.
+- [`grilling`](skills/grilling/). Runs that interview in rounds until every branch of the design is settled.
+- [`handoff`](skills/handoff/). Compacts this conversation into a file another agent can pick up.
+- [`teach`](skills/teach/). Teaches a topic across sessions in the current directory.
+- [`to-questionnaire`](skills/to-questionnaire/). Turns a gap you cannot fill into a Markdown questionnaire for someone else.
+- [`unslop`](skills/unslop/). Cuts AI tells from writing.
+- [`wait-what`](skills/wait-what/). Re-pitches the last message in simpler English, using the project's vocabulary.
+- [`writing-for-agents`](skills/writing-for-agents/). How to write skills, `AGENTS.md`, and other docs an agent will run.
+
 ## Installing
 
 ### One skill
