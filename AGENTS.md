@@ -1,6 +1,6 @@
 # Agent instructions
 
-This repo is a library of Cursor agent skills. Catalog skills live in `skills/`. The sync skill copies only that folder into other projects.
+This repo is a library of agent skills for Cursor, Claude Code, and Codex. Catalog skills live in `skills/`. The sync skill copies only that folder into other projects.
 
 ## Repo map
 
@@ -13,10 +13,11 @@ This repo is a library of Cursor agent skills. Catalog skills live in `skills/`.
 
 ```
 skills/skill-name/
-├── SKILL.md          # required
-├── reference.md      # optional, detailed docs
-├── examples.md       # optional
-└── scripts/          # optional utilities
+├── SKILL.md              # required
+├── agents/openai.yaml    # required. Codex display name, plus invocation policy
+├── reference.md          # optional, detailed docs
+├── examples.md           # optional
+└── scripts/              # optional utilities
 ```
 
 Keep references one level deep from `SKILL.md`. Do not nest further docs that the agent has to chase.
@@ -41,6 +42,7 @@ disable-model-invocation: true
 - `name`: max 64 characters, lowercase letters, numbers, and hyphens only.
 - `description`: max 1024 characters, third person, both what and when. This is how the agent discovers the skill.
 - Default `disable-model-invocation: true` so the skill loads only when named. Omit it only when the agent should auto-invoke from context.
+- Every skill includes `agents/openai.yaml`. User-invoked skills set `policy.allow_implicit_invocation: false`. Model-invoked skills omit that policy.
 
 ## Authoring rules
 
@@ -55,8 +57,9 @@ disable-model-invocation: true
 
 1. Confirm purpose, trigger scenarios, and any required output format.
 2. Create `skills/<skill-name>/SKILL.md` with frontmatter.
-3. Add sibling files or scripts only when they earn their keep.
-4. Check that the description includes trigger terms and that links are one level deep.
+3. Add `agents/openai.yaml`. Set `policy.allow_implicit_invocation: false` when the skill is user-invoked.
+4. Add sibling files or scripts only when they earn their keep.
+5. Check that the description includes trigger terms and that links are one level deep.
 
 ## What not to do
 

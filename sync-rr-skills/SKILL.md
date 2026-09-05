@@ -10,20 +10,25 @@ disable-model-invocation: true
 
 ```
 <project>/
-├── .gitignore                         # ignore .cursor/skills/radikalreems/
+├── .gitignore                         # ignore radikalreems catalog copies
+├── .agents/
+│   └── skills/
+│       └── radikalreems/              # from GitHub, gitignored
+│           └── unslop/
+│               └── SKILL.md
+├── .claude/                           # second copy only if this folder already exists
+│   └── skills/
+│       └── radikalreems/
 └── .cursor/
     └── skills/
         ├── sync-rr-skills/            # this skill, already present
-        ├── my-project-skill/          # yours, committed
-        │   └── SKILL.md
-        └── radikalreems/              # from GitHub, gitignored
-            └── unslop/
-                └── SKILL.md
+        └── my-project-skill/          # yours, committed
+            └── SKILL.md
 ```
 
-Shared catalog lands in `.cursor/skills/radikalreems/`. Project-only skills stay beside it, not inside it. Gitignore only `.cursor/skills/radikalreems/`, not all of `.cursor/skills/`.
+Shared catalog always lands in `.agents/skills/radikalreems/`. Create `.agents/` if it is missing. If `$TARGET/.claude` is already a directory, write the same tree to `.claude/skills/radikalreems/`. Do not create `.claude/`. Project-only skills stay outside `radikalreems/`. Gitignore only those `radikalreems/` copies, not all of `.agents/skills/` or `.claude/skills/`.
 
-The script shallow-clones `https://github.com/radikalreems/skills` into a temp dir and copies only that repo's `skills/` tree into `.cursor/skills/radikalreems/`. README, `.cursor/`, and the rest of the repo stay out. Cursor loads each folder there that contains `SKILL.md`.
+The script shallow-clones `https://github.com/radikalreems/skills` into a temp dir and copies only that repo's `skills/` tree into each dest. README, `.cursor/`, and the rest of the repo stay out. Cursor and Codex load `.agents/skills/`. Claude Code loads `.claude/skills/`.
 
 The catalog updates only when this skill runs.
 
@@ -36,7 +41,7 @@ The catalog updates only when this skill runs.
 
 ## Steps
 
-Check, then write. Publish only into `.cursor/skills/radikalreems/`. Leave every other folder under `.cursor/skills/` as it is.
+Check, then write. Publish only into the `radikalreems/` dests above. Leave every other folder under `.agents/skills/`, `.claude/skills/`, and `.cursor/skills/` as it is.
 
 Run the asset script. Do not rewrite it.
 
@@ -48,9 +53,11 @@ Done when `TARGET` is the workspace root and `$SKILL_DIR/assets/sync-radikalreem
 
 ### 2. Update gitignore
 
-Ensure `$TARGET/.gitignore` contains the line `.cursor/skills/radikalreems/`. Create the file if needed. Append the line if missing.
+Ensure `$TARGET/.gitignore` contains the line `.agents/skills/radikalreems/`. Create the file if needed. Append the line if missing.
 
-Done when that line is present and `.cursor/skills/` as a whole is not ignored.
+If `$TARGET/.claude` is a directory, also ensure the line `.claude/skills/radikalreems/`.
+
+Done when those dest lines are present and `.agents/skills/` and `.claude/skills/` as a whole are not ignored.
 
 ### 3. Sync the catalog
 
@@ -62,16 +69,18 @@ bash "$SKILL_DIR/assets/sync-radikalreems-skills.sh"
 
 The script tracks `main` unless `RADIKALREEMS_SKILLS_REF` is set in this shell to a branch or tag.
 
-A non-zero exit means the fetch failed. Skill folders already under `.cursor/skills/radikalreems/` stay on disk. Report the stderr reason.
+A non-zero exit means the fetch failed. Skill folders already under a dest stay on disk. Report the stderr reason.
 
-Done when `.cursor/skills/radikalreems/` contains catalog skill folders (for example `unslop/`), or the failure has been reported.
+Done when `.agents/skills/radikalreems/` contains catalog skill folders (for example `unslop/`), and `.claude/skills/radikalreems/` does too when `$TARGET/.claude` exists, or the failure has been reported.
 
 ### 4. Verify
 
-- `ls "$TARGET/.cursor/skills/radikalreems"` lists only catalog skill folders (no `.src`, no README)
-- `git check-ignore -q .cursor/skills/radikalreems` succeeds
-- `git status` does not stage `.cursor/skills/radikalreems/`
-- Name collisions: folder names that exist both as `$TARGET/.cursor/skills/<name>/` and `$TARGET/.cursor/skills/radikalreems/<name>/`. Mention them in the wrap-up. Leave both folders as they are.
+- `ls "$TARGET/.agents/skills/radikalreems"` lists only catalog skill folders (no `.src`, no README)
+- If `$TARGET/.claude` exists, `ls "$TARGET/.claude/skills/radikalreems"` lists the same catalog folders
+- `git check-ignore -q .agents/skills/radikalreems` succeeds
+- If the Claude dest was written, `git check-ignore -q .claude/skills/radikalreems` succeeds
+- `git status` does not stage those dests
+- Name collisions: folder names that exist both as `$TARGET/.agents/skills/<name>/` and `$TARGET/.agents/skills/radikalreems/<name>/`, or the same pair under `.claude/skills/` or `.cursor/skills/`. Mention them in the wrap-up. Leave both folders as they are.
 
 Done when every check has a recorded result.
 
@@ -79,12 +88,13 @@ Done when every check has a recorded result.
 
 Tell the user, in this order:
 
-1. Reload so Cursor picks up the skills. Command Palette is Ctrl+Shift+P (Cmd+Shift+P on Mac). Run **Developer: Reload Window**. Then check **Customize → Skills** for catalog skills such as `unslop`.
+1. Reload so the agent picks up the skills. In Cursor, Command Palette is Ctrl+Shift+P (Cmd+Shift+P on Mac). Run **Developer: Reload Window**. Then check **Customize → Skills** for catalog skills such as `unslop`. Claude Code and Codex read the dest folders on the next session.
 2. The catalog stays as this run left it. Run this skill again to refresh from GitHub.
 3. To pin a branch or tag for a run, set `RADIKALREEMS_SKILLS_REF` in the same shell that runs the script.
 4. Name collisions from step 4, if any.
 5. Uninstall:
-   - Delete `.cursor/skills/radikalreems/`
-   - Remove the gitignore line
+   - Delete `.agents/skills/radikalreems/`
+   - Delete `.claude/skills/radikalreems/` if it exists
+   - Remove the gitignore lines
    - Delete `.cursor/skills/sync-rr-skills/` if they no longer want the skill
    - Reload window

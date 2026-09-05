@@ -1,0 +1,5 @@
+interface:
+  display_name: "Sync RR Skills"
+  short_description: "Install or refresh the radikalreems catalog"
+policy:
+  allow_implicit_invocation: false
