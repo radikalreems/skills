@@ -31,6 +31,6 @@ It always writes the catalog to `.agents/skills/radikalreems/` and treats that a
 
 When this repo updates, run `sync-rr-skills` again.
 
-## Warning
+## Note
 
 If you use Claude Code and Cursor in the same project, Cursor also reads `.claude/skills/`. Each catalog skill shows up twice. There is no clean fix for that.
