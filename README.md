@@ -30,3 +30,7 @@ Copy [`sync-rr-skills/`](sync-rr-skills/) using the same steps, then run `sync-r
 It always writes the catalog to `.agents/skills/radikalreems/` and treats that as the source of truth. If the project already has a `.claude/` folder, it also writes a copy to `.claude/skills/radikalreems/`.
 
 When this repo updates, run `sync-rr-skills` again.
+
+## Warning
+
+If you use Claude Code and Cursor in the same project, Cursor also reads `.claude/skills/`. Each catalog skill shows up twice. There is no clean fix for that.
