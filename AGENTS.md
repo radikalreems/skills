@@ -6,13 +6,13 @@ This repo is a library of agent skills for Cursor, Claude Code, and Codex. Catal
 
 - `README.md` — human-facing overview and how to install/use skills.
 - `AGENTS.md` — this file. Follow it when adding, editing, or applying skills.
-- `skills/<skill-name>/` — one folder per catalog skill. The folder name should match the skill `name`.
+- `skills/engineering/<skill-name>/` or `skills/productivity/<skill-name>/` — one folder per catalog skill. The folder name should match the skill `name`.
 - `sync-rr-skills/` — playbook that copies this catalog into another project. Stay out of `skills/`. It is the folder you copy into a target repo, not a catalog skill. Reach it when installing or refreshing shared skills in a target repo.
 
 ## Skill layout
 
 ```
-skills/skill-name/
+skills/engineering/skill-name/   # or skills/productivity/skill-name/
 ├── SKILL.md              # required
 ├── agents/openai.yaml    # required. Codex display name, plus invocation policy
 ├── reference.md          # optional, detailed docs
@@ -56,7 +56,7 @@ disable-model-invocation: true
 ## Workflow for new skills
 
 1. Confirm purpose, trigger scenarios, and any required output format.
-2. Create `skills/<skill-name>/SKILL.md` with frontmatter.
+2. Create `skills/engineering/<skill-name>/SKILL.md` or `skills/productivity/<skill-name>/SKILL.md` with frontmatter.
 3. Add `agents/openai.yaml`. Set `policy.allow_implicit_invocation: false` when the skill is user-invoked.
 4. Add sibling files or scripts only when they earn their keep.
 5. Check that the description includes trigger terms and that links are one level deep.

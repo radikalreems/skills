@@ -1,23 +1,30 @@
 # Skills
 
-A skill is a folder with a `SKILL.md` that tells an agent how to do one job. [`skills/`](skills/) is the full catalog.
+A skill is a folder with a `SKILL.md` that tells an agent how to do one job. [`skills/`](skills/) is the full catalog, split into `engineering/` and `productivity/`.
 
 ## Catalog
 
-- [`grill-me`](skills/grill-me/). Starts a relentless interview to sharpen a plan. Calls `grilling`.
-- [`grilling`](skills/grilling/). Runs that interview in rounds until every branch of the design is settled.
-- [`handoff`](skills/handoff/). Compacts this conversation into a file another agent can pick up.
-- [`teach`](skills/teach/). Teaches a topic across sessions in the current directory.
-- [`to-questionnaire`](skills/to-questionnaire/). Turns a gap you cannot fill into a Markdown questionnaire for someone else.
-- [`unslop`](skills/unslop/). Cuts AI tells from writing.
-- [`wait-what`](skills/wait-what/). Re-pitches the last message in simpler English, using the project's vocabulary.
-- [`writing-for-agents`](skills/writing-for-agents/). How to write skills, `AGENTS.md`, and other docs an agent will run.
+### Engineering
+
+- [`setup-workflow`](skills/engineering/setup-workflow/). Configures this repo's issue tracker, triage labels, and domain docs.
+- [`triage`](skills/engineering/triage/). Moves issues through triage roles and writes agent-ready briefs.
+
+### Productivity
+
+- [`grill-me`](skills/productivity/grill-me/). Starts a relentless interview to sharpen a plan. Calls `grilling`.
+- [`grilling`](skills/productivity/grilling/). Runs that interview in rounds until every branch of the design is settled.
+- [`handoff`](skills/productivity/handoff/). Compacts this conversation into a file another agent can pick up.
+- [`teach`](skills/productivity/teach/). Teaches a topic across sessions in the current directory.
+- [`to-questionnaire`](skills/productivity/to-questionnaire/). Turns a gap you cannot fill into a Markdown questionnaire for someone else.
+- [`unslop`](skills/productivity/unslop/). Cuts AI tells from writing.
+- [`wait-what`](skills/productivity/wait-what/). Re-pitches the last message in simpler English, using the project's vocabulary.
+- [`writing-for-agents`](skills/productivity/writing-for-agents/). How to write skills, `AGENTS.md`, and other docs an agent will run.
 
 ## Installing
 
 ### One skill
 
-Copy that skill's folder from `skills/` into the project:
+Copy that skill's folder from `skills/engineering/` or `skills/productivity/` into the project:
 
 - `.agents/skills/` for Cursor and Codex
 - `.claude/skills/` for Claude Code
@@ -27,7 +34,7 @@ Copy that skill's folder from `skills/` into the project:
 
 Copy [`sync-rr-skills/`](sync-rr-skills/) using the same steps, then run `sync-rr-skills`.
 
-It always writes the catalog to `.agents/skills/radikalreems/` and treats that as the source of truth. If the project already has a `.claude/` folder, it also writes a copy to `.claude/skills/radikalreems/`.
+It always writes the catalog to `.agents/skills/radikalreems/` and treats that as the source of truth. If the project already has a `.claude/` folder, it also writes a copy to `.claude/skills/radikalreems/`. Each skill lands as its own folder there, not under `engineering/` or `productivity/`.
 
 When this repo updates, run `sync-rr-skills` again.
 

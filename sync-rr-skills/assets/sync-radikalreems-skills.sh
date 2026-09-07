@@ -27,36 +27,55 @@ fail() {
 
 trap cleanup EXIT
 
+collect_skills() {
+  local src="$1"
+  local staging="$2"
+  local skill_md skill_dir name
+
+  while IFS= read -r skill_md; do
+    skill_dir="$(dirname "$skill_md")"
+    name="$(basename "$skill_dir")"
+    rm -rf "$staging/$name"
+    cp -R "$skill_dir" "$staging/$name"
+  done < <(find "$src" -mindepth 2 -maxdepth 3 -name SKILL.md)
+}
+
 publish_skills() {
   local src="$1"
   local dest="$2"
-  local name dest_skill src_skill
+  local staging name dest_skill src_skill
 
   if [ ! -d "$src" ]; then
     fail "clone has no skills/ directory"
   fi
 
+  staging="$(mktemp -d "${TMPDIR:-/tmp}/radikalreems-skills-flat.XXXXXX")"
+  collect_skills "$src" "$staging"
+
   mkdir -p "$dest"
 
   if command -v rsync >/dev/null 2>&1; then
-    rsync -a --delete "$src/" "$dest/" >&2
+    rsync -a --delete "$staging/" "$dest/" >&2
+    rm -rf "$staging"
     return
   fi
 
   for dest_skill in "$dest"/*/; do
     [ -d "$dest_skill" ] || continue
     name="$(basename "$dest_skill")"
-    if [ ! -d "$src/$name" ]; then
+    if [ ! -d "$staging/$name" ]; then
       rm -rf "$dest_skill"
     fi
   done
 
-  for src_skill in "$src"/*/; do
+  for src_skill in "$staging"/*/; do
     [ -d "$src_skill" ] || continue
     name="$(basename "$src_skill")"
     rm -rf "$dest/$name"
     cp -R "$src_skill" "$dest/$name"
   done
+
+  rm -rf "$staging"
 }
 
 if [ ! -d "$PROJECT_ROOT/.agents/skills/sync-rr-skills" ]; then

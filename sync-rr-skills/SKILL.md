@@ -26,7 +26,7 @@ disable-model-invocation: true
 
 Shared catalog always lands in `.agents/skills/radikalreems/`. Create `.agents/` if it is missing. If `$TARGET/.claude` is already a directory, write the same tree to `.claude/skills/radikalreems/`. Do not create `.claude/`. Project-only skills stay outside `radikalreems/`. Gitignore only those `radikalreems/` copies, not all of `.agents/skills/` or `.claude/skills/`.
 
-The script shallow-clones `https://github.com/radikalreems/skills` into a temp dir and copies only that repo's `skills/` tree into each dest. README and the rest of the repo stay out. Cursor and Codex load `.agents/skills/`. Claude Code loads `.claude/skills/`.
+The script shallow-clones `https://github.com/radikalreems/skills` into a temp dir, finds each skill folder under `skills/` (including `engineering/` and `productivity/`), and copies those folders into each dest. Category wrappers stay out. README and the rest of the repo stay out. Cursor and Codex load `.agents/skills/`. Claude Code loads `.claude/skills/`.
 
 The catalog updates only when this skill runs.
 
