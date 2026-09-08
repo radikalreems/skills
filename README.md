@@ -11,6 +11,9 @@ A skill is a folder with a `SKILL.md` that tells an agent how to do one job. [`s
 - [`diagnosing-bugs`](skills/engineering/diagnosing-bugs/). Diagnosis loop for hard bugs and performance regressions.
 - [`domain-modeling`](skills/engineering/domain-modeling/). Builds and sharpens the project's domain model, glossary, and ADRs.
 - [`grill-with-docs`](skills/engineering/grill-with-docs/). Starts a grilling interview and writes glossary and ADRs as decisions land.
+- [`implement`](skills/engineering/implement/). Implements a spec or set of tickets, using TDD at agreed seams.
+- [`improve-codebase-architecture`](skills/engineering/improve-codebase-architecture/). Scans for deepening opportunities, reports them visually, then grills the one you pick.
+- [`prototype`](skills/engineering/prototype/). Builds throwaway code to answer a design question, either logic or UI.
 - [`research`](skills/engineering/research/). Investigates a question against primary sources and writes the findings as a Markdown file.
 - [`resolving-merge-conflicts`](skills/engineering/resolving-merge-conflicts/). Resolves an in-progress git merge or rebase conflict.
 - [`setup-workflow`](skills/engineering/setup-workflow/). Configures this repo's issue tracker, triage labels, and domain docs.
