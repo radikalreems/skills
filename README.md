@@ -6,6 +6,7 @@ A skill is a folder with a `SKILL.md` that tells an agent how to do one job. [`s
 
 ### Engineering
 
+- [`domain-modeling`](skills/engineering/domain-modeling/). Builds and sharpens the project's domain model, glossary, and ADRs.
 - [`setup-workflow`](skills/engineering/setup-workflow/). Configures this repo's issue tracker, triage labels, and domain docs.
 - [`triage`](skills/engineering/triage/). Moves issues through triage roles and writes agent-ready briefs.
 - [`wayfinder`](skills/engineering/wayfinder/). Plans a large effort as a shared map of decision tickets on the issue tracker.
