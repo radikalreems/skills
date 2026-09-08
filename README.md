@@ -15,6 +15,8 @@ A skill is a folder with a `SKILL.md` that tells an agent how to do one job. [`s
 - [`resolving-merge-conflicts`](skills/engineering/resolving-merge-conflicts/). Resolves an in-progress git merge or rebase conflict.
 - [`setup-workflow`](skills/engineering/setup-workflow/). Configures this repo's issue tracker, triage labels, and domain docs.
 - [`tdd`](skills/engineering/tdd/). Test-driven red-green loop: write a failing test, then just enough code to pass it.
+- [`to-spec`](skills/engineering/to-spec/). Turns the current conversation into a spec and publishes it to the issue tracker.
+- [`to-tickets`](skills/engineering/to-tickets/). Breaks a plan or spec into tracer-bullet tickets with blocking edges.
 - [`triage`](skills/engineering/triage/). Moves issues through triage roles and writes agent-ready briefs.
 - [`wayfinder`](skills/engineering/wayfinder/). Plans a large effort as a shared map of decision tickets on the issue tracker.
 
