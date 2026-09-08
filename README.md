@@ -6,6 +6,7 @@ A skill is a folder with a `SKILL.md` that tells an agent how to do one job. [`s
 
 ### Engineering
 
+- [`ask-radikal`](skills/engineering/ask-radikal/). Router: picks which skill or flow fits the situation.
 - [`code-review`](skills/engineering/code-review/). Reviews a diff on two axes: repo standards and the originating spec.
 - [`codebase-design`](skills/engineering/codebase-design/). Shared vocabulary for designing deep modules, seams, and interfaces.
 - [`diagnosing-bugs`](skills/engineering/diagnosing-bugs/). Diagnosis loop for hard bugs and performance regressions.
@@ -22,6 +23,7 @@ A skill is a folder with a `SKILL.md` that tells an agent how to do one job. [`s
 - [`to-tickets`](skills/engineering/to-tickets/). Breaks a plan or spec into tracer-bullet tickets with blocking edges.
 - [`triage`](skills/engineering/triage/). Moves issues through triage roles and writes agent-ready briefs.
 - [`wayfinder`](skills/engineering/wayfinder/). Plans a large effort as a shared map of decision tickets on the issue tracker.
+- [`wizard`](skills/engineering/wizard/). Generates an interactive bash wizard for steps only a human can take.
 
 ### Productivity
 
