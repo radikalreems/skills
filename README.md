@@ -11,6 +11,7 @@ A skill is a folder with a `SKILL.md` that tells an agent how to do one job. [`s
 - [`grill-with-docs`](skills/engineering/grill-with-docs/). Starts a grilling interview and writes glossary and ADRs as decisions land.
 - [`research`](skills/engineering/research/). Investigates a question against primary sources and writes the findings as a Markdown file.
 - [`setup-workflow`](skills/engineering/setup-workflow/). Configures this repo's issue tracker, triage labels, and domain docs.
+- [`tdd`](skills/engineering/tdd/). Test-driven red-green loop: write a failing test, then just enough code to pass it.
 - [`triage`](skills/engineering/triage/). Moves issues through triage roles and writes agent-ready briefs.
 - [`wayfinder`](skills/engineering/wayfinder/). Plans a large effort as a shared map of decision tickets on the issue tracker.
 
