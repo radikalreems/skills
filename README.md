@@ -8,6 +8,7 @@ A skill is a folder with a `SKILL.md` that tells an agent how to do one job. [`s
 
 - [`code-review`](skills/engineering/code-review/). Reviews a diff on two axes: repo standards and the originating spec.
 - [`codebase-design`](skills/engineering/codebase-design/). Shared vocabulary for designing deep modules, seams, and interfaces.
+- [`diagnosing-bugs`](skills/engineering/diagnosing-bugs/). Diagnosis loop for hard bugs and performance regressions.
 - [`domain-modeling`](skills/engineering/domain-modeling/). Builds and sharpens the project's domain model, glossary, and ADRs.
 - [`grill-with-docs`](skills/engineering/grill-with-docs/). Starts a grilling interview and writes glossary and ADRs as decisions land.
 - [`research`](skills/engineering/research/). Investigates a question against primary sources and writes the findings as a Markdown file.
