@@ -1,11 +1,11 @@
 # Issue tracker: Local Markdown
 
-The local issue tracker is the `issues/` folder at the repo root. `features/` uses this same layout for work a human handles. Paths below use `issues/`. For human-handled work, use `features/` in place of `issues/`.
+The local issue tracker is `.scratch/issues/`. `.scratch/features/` uses this same layout for work a human handles. Paths below use `.scratch/issues/`. For human-handled work, use `.scratch/features/` in place of `.scratch/issues/`.
 
-An issue project is one folder under `issues/`. It may contain any of the files below.
+An issue project is one folder under `.scratch/issues/`. It may contain any of the files below.
 
 ```
-issues/
+.scratch/issues/
 ├── BACKLOG.md
 ├── _done/
 │   └── <issue-slug>/
@@ -35,10 +35,10 @@ Record triage state as a `Status:` line near the top of the file. Role strings a
 
 Used by `/wayfinder`. The map is one file. Each decision ticket is its own file under `tasks/`.
 
-- **Map**: `issues/<effort>/map.md`.
-- **Child ticket**: `issues/<effort>/tasks/<NN>-<slug>.md`, numbered from `01`, with the question in the body. A `Type:` line records `research`, `prototype`, `grilling`, or `task`. A `Status:` line records `claimed` or `resolved`.
-- **Research findings**: one file in `issues/<effort>/research/`. The ticket points at that file.
+- **Map**: `.scratch/issues/<effort>/map.md`.
+- **Child ticket**: `.scratch/issues/<effort>/tasks/<NN>-<slug>.md`, numbered from `01`, with the question in the body. A `Type:` line records `research`, `prototype`, `grilling`, or `task`. A `Status:` line records `claimed` or `resolved`.
+- **Research findings**: one file in `.scratch/issues/<effort>/research/`. The ticket points at that file.
 - **Blocking**: a `Blocked by: NN, NN` line near the top. A ticket is unblocked when every file it lists is `resolved`.
-- **Frontier**: scan ticket files directly in `issues/<effort>/tasks/`, skipping `_done/`, for files that are open, unblocked, and unclaimed. First by number wins.
+- **Frontier**: scan ticket files directly in `.scratch/issues/<effort>/tasks/`, skipping `_done/`, for files that are open, unblocked, and unclaimed. First by number wins.
 - **Claim**: set `Status: claimed` and save before any work.
 - **Resolve**: append the answer under an `## Answer` heading, set `Status: resolved`, move the file into `tasks/_done/`, then append a context pointer, gist and link, to Decisions-so-far in `map.md`.
