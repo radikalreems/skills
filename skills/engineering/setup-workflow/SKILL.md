@@ -87,15 +87,15 @@ The sections:
 ```markdown
 ## Issue tracker
 
-[one-line summary of where issues are tracked]. See `docs/agents/issue-tracker.md`.
+[one-line summary of where issues are tracked]. When publishing, fetching, or blocking an issue, read `docs/agents/issue-tracker.md` and follow it.
 
 ## Triage labels
 
-[one-line summary of the label vocabulary]. See `docs/agents/triage-labels.md`.
+[one-line summary of the label vocabulary]. When applying or reading a triage role, read `docs/agents/triage-labels.md` and follow it.
 
 ## Domain docs
 
-[one-line summary of layout: "single-context" or "multi-context"]. See `docs/agents/domain.md`.
+[one-line summary of layout: "single-context" or "multi-context"]. When exploring the codebase or naming a domain concept, read `docs/agents/domain.md` and follow it.
 ```
 
 Then write the docs files using the seed templates in this skill folder as a starting point:
