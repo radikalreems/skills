@@ -111,6 +111,30 @@ Copy the matching issue-tracker seed to `docs/agents/issue-tracker.md` and the m
 
 For "other" issue trackers, write `docs/agents/issue-tracker.md` from scratch using the user's description.
 
+Write this workflow language into the root `CONTEXT.md`, using the format in the `domain-modeling` skill's `CONTEXT-FORMAT.md`. Create the file if it is missing. If it already has a `## Language` section, add any of these terms that are absent. Leave every other term as it is.
+
+```markdown
+**Issue**:
+A tracked problem, filed under `.scratch/issues/`.
+_Avoid_: Bug
+
+**Feature**:
+Work a human handles, filed under `.scratch/features/`.
+_Avoid_: Addon
+
+**Issue project**:
+A specific issue that already has a folder under `.scratch/issues/`.
+
+**Feature project**:
+A specific feature that already has a folder under `.scratch/features/`.
+
+**Ticket**:
+A code implementation action. One file under the issue project's `tickets/`.
+
+**Task**:
+A wayfinding map action. One file under the issue project's `tasks/`.
+```
+
 ### 5. Done
 
 Tell the user the setup is complete and which engineering skills will now read from these files. Mention they can edit `docs/agents/*.md` directly later; re-running this skill is only necessary if they want to switch issue trackers or restart from scratch.

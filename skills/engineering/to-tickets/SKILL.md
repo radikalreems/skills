@@ -59,7 +59,7 @@ Iterate until the user approves the breakdown.
 
 Publish the approved tickets using the issue tracker figured out earlier. The tickets are the same either way; only the shape of the blocking edges changes:
 
-- **Local files** → write one file per ticket under `.scratch/<feature-slug>/issues/<NN>-<slug>.md`, numbered from `01` in dependency order (blockers first). Each file's "Blocked by" lists the numbers/titles it depends on. Read [LOCAL-TICKET.md](LOCAL-TICKET.md) and write each file in that shape, one ticket per file.
+- **Local files** → write one file per ticket under `.scratch/issues/<issue-slug>/tickets/<NN>-<slug>.md` (or `.scratch/features/<issue-slug>/tickets/` for human-handled work), numbered from `01` in dependency order (blockers first). Each file's "Blocked by" lists the numbers/titles it depends on. Read [LOCAL-TICKET.md](LOCAL-TICKET.md) and write each file in that shape, one ticket per file. Follow `docs/agents/issue-tracker.md` when it is present.
 - **A real issue tracker (GitHub, Linear, …)** → publish one issue per ticket in dependency order (blockers first) so each ticket's blocking edges can reference real identifiers. Use the platform's native blocking / sub-issue relationship where it has one; otherwise set each ticket's "Blocked by" to the blocking issues. Apply the `ready-for-agent` triage label unless instructed otherwise; the tickets are agent-grabbable by construction. Read [ISSUE.md](ISSUE.md) and use that body.
 
 Work the **frontier**: any ticket whose blockers are all done. For a purely linear chain that means top to bottom.
