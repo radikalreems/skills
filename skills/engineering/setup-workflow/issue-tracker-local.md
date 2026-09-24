@@ -1,30 +1,44 @@
 # Issue tracker: Local Markdown
 
-Issues and specs for this repo live as markdown files in `.scratch/`.
+The local issue tracker is the `issues/` folder at the repo root. `features/` uses this same layout for work a human handles. Paths below use `issues/`. For human-handled work, use `features/` in place of `issues/`.
 
-## Conventions
+An issue project is one folder under `issues/`. It may contain any of the files below.
 
-- One feature per directory: `.scratch/<feature-slug>/`
-- The spec is `.scratch/<feature-slug>/spec.md`
-- Implementation issues are one file per ticket at `.scratch/<feature-slug>/issues/<NN>-<slug>.md`, numbered from `01`, never a single combined tickets file
-- Triage state is recorded as a `Status:` line near the top of each issue file (see `triage-labels.md` for the role strings)
-- Comments and conversation history append to the bottom of the file under a `## Comments` heading
+```
+issues/
+├── BACKLOG.md
+├── _done/
+│   └── <issue-slug>/
+└── <issue-slug>/
+    ├── issue.md
+    ├── spec.md
+    ├── map.md
+    ├── research/
+    └── tasks/
+        ├── <NN>-<slug>.md
+        └── _done/
+```
 
-## When a skill says "publish to the issue tracker"
+- `BACKLOG.md` is a dump of issues that have not been looked at yet. An entry can be small or large. Text here stays a dump. Create an issue-project folder when the user asks to take an entry out of the backlog.
+- `_done/` holds issue projects that are finished. Move the project folder here when the work is done. It is not an issue project of its own. Skip it when scanning for open work.
+- `issue.md` is the raw report, usually pasted from a user who wants the problem filed without a designed spec. Scope lives in `spec.md`.
+- `spec.md` says what the issue is, what is in scope, and what is out of scope. `/to-spec` builds it. When `map.md` is present, the spec is based on that map.
+- `map.md` is present when `/wayfinder` made this issue project a map. It holds Destination, Notes, Decisions-so-far, Not yet specified, and Out of scope.
+- `research/` holds temporary files from research run while deciding the solution. Write a findings file here when a research ticket names this folder. The folder gets large. Read a file in it only when the user, a ticket, or the map names that file.
+- `tasks/` is one file per ticket, usually from `/to-tickets`. Name each file `<NN>-<slug>.md`, numbered from `01` in dependency order, blockers first. When a ticket is done, move that file into `tasks/_done/`.
 
-Create a new file under `.scratch/<feature-slug>/` (creating the directory if needed).
+When an issue or ticket contains a checklist, change each finished item from `- [ ]` to `- [x]` and save the file before continuing.
 
-## When a skill says "fetch the relevant ticket"
-
-Read the file at the referenced path. The user will normally pass the path or the issue number directly.
+Record triage state as a `Status:` line near the top of the file. Role strings are in `triage-labels.md`. Append comments under a `## Comments` heading at the bottom of the file.
 
 ## Wayfinding operations
 
-Used by `/wayfinder`. The **map** is a file with one **child** file per ticket.
+Used by `/wayfinder`. The map is one file. Each decision ticket is its own file under `tasks/`.
 
-- **Map**: `.scratch/<effort>/map.md` (the Notes / Decisions-so-far / Fog body).
-- **Child ticket**: `.scratch/<effort>/issues/NN-<slug>.md`, numbered from `01`, with the question in the body. A `Type:` line records the ticket type (`research`/`prototype`/`grilling`/`task`); a `Status:` line records `claimed`/`resolved`.
+- **Map**: `issues/<effort>/map.md`.
+- **Child ticket**: `issues/<effort>/tasks/<NN>-<slug>.md`, numbered from `01`, with the question in the body. A `Type:` line records `research`, `prototype`, `grilling`, or `task`. A `Status:` line records `claimed` or `resolved`.
+- **Research findings**: one file in `issues/<effort>/research/`. The ticket points at that file.
 - **Blocking**: a `Blocked by: NN, NN` line near the top. A ticket is unblocked when every file it lists is `resolved`.
-- **Frontier**: scan `.scratch/<effort>/issues/` for files that are open, unblocked, and unclaimed; first by number wins.
+- **Frontier**: scan ticket files directly in `issues/<effort>/tasks/`, skipping `_done/`, for files that are open, unblocked, and unclaimed. First by number wins.
 - **Claim**: set `Status: claimed` and save before any work.
-- **Resolve**: append the answer under an `## Answer` heading, set `Status: resolved`, then append a context pointer (gist + link) to the map's Decisions-so-far in `map.md`.
+- **Resolve**: append the answer under an `## Answer` heading, set `Status: resolved`, move the file into `tasks/_done/`, then append a context pointer, gist and link, to Decisions-so-far in `map.md`.
