@@ -133,6 +133,9 @@ A code implementation action. One file under the issue project's `tickets/`.
 
 **Task**:
 A wayfinding map action. One file under the issue project's `tasks/`.
+
+**Seam**:
+The connection another repo meets on a surface this repo has already built. One file per other repo, under the issue project's `seams/`.
 ```
 
 ### 5. Done

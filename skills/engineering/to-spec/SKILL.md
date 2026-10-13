@@ -8,6 +8,8 @@ This skill takes the current conversation context and codebase understanding and
 
 The issue tracker and triage label vocabulary should have been provided to you. If not, tell the user to run `/setup-workflow`.
 
+When the user passes a seam file, read Seam operations in `docs/agents/issue-tracker.md` and follow **Open** before the steps below. That step is done when the seam file's **Issue project** line is this project's slug and `issue.md` has a `Seam:` line pointing at the seam file. The exchange in the seam file is given. Step 3 publishes into that same issue project, and the spec's connection facts match the exchange.
+
 ## Process
 
 1. Explore the repo to understand the current state of the codebase, if you haven't already. Use the project's domain glossary vocabulary throughout the spec, and respect any ADRs in the area you're touching.

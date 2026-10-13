@@ -1,0 +1,5 @@
+interface:
+  display_name: "To Seam"
+  short_description: "Write a cross-repo connection file"
+policy:
+  allow_implicit_invocation: false
