@@ -8,3 +8,5 @@
 
 - [ ] Acceptance criterion 1
 - [ ] Acceptance criterion 2
+
+When the work on this ticket is finished, mark each completed acceptance criterion `- [x]`. When every criterion is checked, move this file into `tickets/_done/`.
