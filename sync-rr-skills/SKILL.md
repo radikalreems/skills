@@ -10,13 +10,13 @@ disable-model-invocation: true
 
 ```
 <project>/
-├── .gitignore                         # ignore radikalreems catalog copies
-├── .agents/
+├── .git/info/exclude                  # local patterns, never committed
+├── .agents/                           # local
 │   └── skills/
 │       ├── sync-rr-skills/            # this skill, already present
-│       ├── my-project-skill/          # yours, committed
+│       ├── my-project-skill/          # yours, stays on this clone
 │       │   └── SKILL.md
-│       └── radikalreems/              # from GitHub, gitignored
+│       └── radikalreems/              # from GitHub
 │           └── unslop/
 │               └── SKILL.md
 └── .claude/                           # second catalog copy only if this folder already exists
@@ -24,7 +24,7 @@ disable-model-invocation: true
         └── radikalreems/
 ```
 
-Shared catalog always lands in `.agents/skills/radikalreems/`. Create `.agents/` if it is missing. If `$TARGET/.claude` is already a directory, write the same tree to `.claude/skills/radikalreems/`. Do not create `.claude/`. Project-only skills stay outside `radikalreems/`. Gitignore only those `radikalreems/` copies, not all of `.agents/skills/` or `.claude/skills/`.
+Shared catalog always lands in `.agents/skills/radikalreems/`. Create `.agents/` if it is missing. If `$TARGET/.claude` is already a directory, write the same tree to `.claude/skills/radikalreems/`. Do not create `.claude/`. Project-only skills stay outside `radikalreems/`. Record `.agents/` in `.git/info/exclude`. When `.claude` already exists, also record `.claude/skills/radikalreems/` there. The committed `.gitignore` stays as it is. `.claude/skills/` as a whole stays trackable.
 
 The script shallow-clones `https://github.com/radikalreems/skills` into a temp dir, finds each skill folder under `skills/` (including `engineering/` and `productivity/`), and copies those folders into each dest. Category wrappers stay out. README and the rest of the repo stay out. Cursor and Codex load `.agents/skills/`. Claude Code loads `.claude/skills/`.
 
@@ -49,13 +49,19 @@ The target is this workspace's root. `$SKILL_DIR` is `$TARGET/.agents/skills/syn
 
 Done when `TARGET` is the workspace root and `$SKILL_DIR/assets/sync-radikalreems-skills.sh` exists.
 
-### 2. Update gitignore
+### 2. Keep the catalog local
 
-Ensure `$TARGET/.gitignore` contains the line `.agents/skills/radikalreems/`. Create the file if needed. Append the line if missing.
+Append any missing pattern to `$TARGET/.git/info/exclude`. Create that file when it is absent. The committed `.gitignore` stays as it is.
 
-If `$TARGET/.claude` is a directory, also ensure the line `.claude/skills/radikalreems/`.
+```
+.agents/
+```
 
-Done when those dest lines are present and `.agents/skills/` and `.claude/skills/` as a whole are not ignored.
+When `$TARGET/.claude` is a directory, also append `.claude/skills/radikalreems/` if that line is absent.
+
+A parent pattern that already covers a dest counts as present. `setup-workflow` may already have written `.agents/`.
+
+Done when `git check-ignore -q --no-index .agents/skills/radikalreems` succeeds, `.claude/skills/radikalreems` is ignored when `.claude` exists, and `.gitignore` has no line for these paths.
 
 ### 3. Sync the catalog
 
@@ -75,8 +81,8 @@ Done when `.agents/skills/radikalreems/` contains catalog skill folders (for exa
 
 - `ls "$TARGET/.agents/skills/radikalreems"` lists only catalog skill folders (no `.src`, no README)
 - If `$TARGET/.claude` exists, `ls "$TARGET/.claude/skills/radikalreems"` lists the same catalog folders
-- `git check-ignore -q .agents/skills/radikalreems` succeeds
-- If the Claude dest was written, `git check-ignore -q .claude/skills/radikalreems` succeeds
+- `git check-ignore -q --no-index .agents/skills/radikalreems` succeeds
+- If the Claude dest was written, `git check-ignore -q --no-index .claude/skills/radikalreems` succeeds
 - `git status` does not stage those dests
 - Name collisions: folder names that exist both as `$TARGET/.agents/skills/<name>/` and `$TARGET/.agents/skills/radikalreems/<name>/`, or the same pair under `.claude/skills/`. Mention them in the wrap-up. Leave both folders as they are.
 
@@ -93,6 +99,6 @@ Tell the user, in this order:
 5. Uninstall:
    - Delete `.agents/skills/radikalreems/`
    - Delete `.claude/skills/radikalreems/` if it exists
-   - Remove the gitignore lines
+   - Remove the `.agents/` and `.claude/skills/radikalreems/` lines from `.git/info/exclude`
    - Delete `.agents/skills/sync-rr-skills/` if they no longer want the skill
    - Reload window
