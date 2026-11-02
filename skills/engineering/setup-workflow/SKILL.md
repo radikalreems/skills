@@ -138,7 +138,7 @@ The connection another repo meets on a surface this repo has already built. One 
 
 ### 5. Keep it local
 
-The config this skill writes is per clone. Append any missing pattern to `.git/info/exclude`. Create that file when it is absent. The committed `.gitignore` stays as it is.
+The skills under `.agents/` and every file this workflow adds stay on this clone. They do not go to the remote. Record them only in `.git/info/exclude`. Create that file when it is absent. Do not add these paths to `.gitignore`. Do not commit `.git/info/exclude`. The committed `.gitignore` stays as it is, with no new lines for this workflow.
 
 ```
 /AGENTS.md
@@ -147,16 +147,17 @@ CONTEXT.md
 CONTEXT-MAP.md
 docs/
 .agents/
+.scratch/
 ```
 
-`/AGENTS.md` and `/CLAUDE.md` are the root file from step 4. `CONTEXT.md` matches the root glossary and a context's `CONTEXT.md`. `docs/` matches `docs/agents/`, `docs/adr/`, and `src/<context>/docs/`. `.agents/` is the local skills folder.
+`/AGENTS.md` and `/CLAUDE.md` are the root file from step 4. `CONTEXT.md` matches the root glossary and a context's `CONTEXT.md`. `docs/` matches `docs/agents/`, `docs/adr/`, and `src/<context>/docs/`. `.agents/` is the local skills folder, including this skill and the rest of the catalog. `.scratch/` is the local issue tracker (`issues/` and `features/`).
 
 Append a pattern only when that exact line is absent.
 
-Done when each pattern is present once and `git check-ignore -q --no-index` succeeds for `AGENTS.md`, `CLAUDE.md`, `CONTEXT.md`, `CONTEXT-MAP.md`, `docs/agents/issue-tracker.md`, and `.agents/skills/`.
+Done when each pattern is present once, none of these lines were added to `.gitignore`, and `git check-ignore -q --no-index` succeeds for `AGENTS.md`, `CLAUDE.md`, `CONTEXT.md`, `CONTEXT-MAP.md`, `docs/agents/issue-tracker.md`, `.agents/skills/`, and `.scratch/`.
 
 A path already in the index stays tracked. Exclude applies to untracked files. Name any already-tracked paths in the wrap-up and leave them in the index.
 
 ### 6. Done
 
-Tell the user the setup is complete and which engineering skills will now read from these files. Mention they can edit `docs/agents/*.md` directly later; re-running this skill is only necessary if they want to switch issue trackers or restart from scratch. Tell them the paths from step 5 are in `.git/info/exclude`, and name any of those paths that were already tracked.
+Tell the user the setup is complete and which engineering skills will now read from these files. Mention they can edit `docs/agents/*.md` directly later; re-running this skill is only necessary if they want to switch issue trackers or restart from scratch. Tell them the paths from step 5 are in `.git/info/exclude` only, not in `.gitignore`, and name any of those paths that were already tracked.
