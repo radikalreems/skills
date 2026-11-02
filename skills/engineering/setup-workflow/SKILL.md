@@ -111,16 +111,14 @@ Copy the matching issue-tracker seed to `docs/agents/issue-tracker.md` and the m
 
 For "other" issue trackers, write `docs/agents/issue-tracker.md` from scratch using the user's description.
 
-Write this workflow language into the root `CONTEXT.md`, using the format in the `domain-modeling` skill's `CONTEXT-FORMAT.md`. Create the file if it is missing. If it already has a `## Language` section, add any of these terms that are absent. Leave every other term as it is.
+Write this workflow language into the root `CONTEXT.md`, using the format in the `domain-modeling` skill's `CONTEXT-FORMAT.md`. Create the file if it is missing. If it already has a `## Language` section, add any of these terms that are absent. Delete every `_Avoid_` line in the file. Leave every other term as it is.
 
 ```markdown
 **Issue**:
 A tracked problem, filed under `.scratch/issues/`.
-_Avoid_: Bug
 
 **Feature**:
 Work a human handles, filed under `.scratch/features/`.
-_Avoid_: Addon
 
 **Issue project**:
 A specific issue that already has a folder under `.scratch/issues/`.
