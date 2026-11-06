@@ -34,6 +34,8 @@ Spend disproportionate effort here. **Be aggressive. Be creative. Refuse to give
 9. **Differential loop.** Run the same input through old-version vs new-version (or two configs) and diff outputs.
 10. **HITL bash script.** Last resort. If a human must click, drive _them_ with `scripts/hitl-loop.template.sh` so the loop is still structured. Captured output feeds back to you.
 
+Save a script you write for this issue in the issue project's `scripts/`. Use `.scratch/issues/<issue-slug>/scripts/` for an issue project and `.scratch/features/<issue-slug>/scripts/` for a feature project. A script for the application as a whole, such as a deploy script, goes in the application's `scripts/`. `scripts/hitl-loop.template.sh` is the template shipped with this skill.
+
 Build the right feedback loop, and the bug is 90% fixed.
 
 ### Tighten the loop

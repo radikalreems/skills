@@ -87,7 +87,7 @@ The sections:
 ```markdown
 ## Issue tracker
 
-[one-line summary of where issues are tracked]. When publishing, fetching, or blocking an issue, read `docs/agents/issue-tracker.md` and follow it.
+[one-line summary of where issues are tracked]. When publishing, fetching, or blocking an issue, or writing a script for one, read `docs/agents/issue-tracker.md` and follow it.
 
 ## Triage labels
 

@@ -43,3 +43,7 @@ Used by `/wayfinder`. The **map** is a single issue with **child** issues as tic
 - **Frontier query**: list the map's open children (`gh issue list --state open`, scoped to the map's sub-issues / task list), drop any with an open blocker (`issue_dependencies_summary.blocked_by > 0`, or an open issue in the `Blocked by` line) or an assignee; first in map order wins.
 - **Claim**: `gh issue edit <n> --add-assignee @me`, the session's first write.
 - **Resolve**: `gh issue comment <n> --body "<answer>"`, then `gh issue close <n>`, then append a context pointer (gist + link) to the map's Decisions-so-far.
+
+## Scripts
+
+A script written to carry out an issue, including a temporary script, goes in that issue project's `scripts/`. Use `.scratch/issues/<issue-slug>/scripts/` for an issue project and `.scratch/features/<issue-slug>/scripts/` for a feature project. A script for the application as a whole, such as a deploy script, goes in the application's `scripts/`.

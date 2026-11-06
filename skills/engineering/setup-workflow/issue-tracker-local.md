@@ -14,6 +14,7 @@ An issue project is one folder under `.scratch/issues/`. It may contain any of t
     ├── spec.md
     ├── map.md
     ├── research/
+    ├── scripts/
     ├── tickets/
     │   ├── <NN>-<slug>.md
     │   └── _done/
@@ -31,6 +32,7 @@ An issue project is one folder under `.scratch/issues/`. It may contain any of t
 - `spec.md` says what the issue is, what is in scope, and what is out of scope. `/to-spec` builds it. When `map.md` is present, the spec is based on that map.
 - `map.md` is present when `/wayfinder` made this issue project a map. It holds Destination, Notes, Decisions-so-far, Not yet specified, and Out of scope.
 - `research/` holds temporary files from research run while deciding the solution. Write a findings file here when a research task names this folder. The folder gets large. Read a file in it only when the user, a task, or the map names that file.
+- `scripts/` holds scripts written to carry out this issue, including a temporary script. Create the folder when the first script is needed. A script for the application as a whole, such as a deploy script, goes in the application's `scripts/`.
 - `tickets/` is one file per ticket, usually from `/to-tickets`. A ticket is a code implementation action. Name each file `<NN>-<slug>.md`, numbered from `01` in dependency order, blockers first. When a ticket is done, move that file into `tickets/_done/`.
 - `seams/` is one file per other repo, from `/to-seam`. A seam is how that repo connects to a surface this repo has already built. Name the file `<repo-slug>.md`. Seam operations say when it moves to `seams/_done/`.
 - `tasks/` is one file per task, from `/wayfinder`. A task is a wayfinding map action. Name each file `<NN>-<slug>.md`, numbered from `01`. When a task is done, move that file into `tasks/_done/`.

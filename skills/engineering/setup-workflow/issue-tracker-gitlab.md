@@ -44,3 +44,7 @@ Used by `/wayfinder`. The **map** is a single issue with **child** issues as tic
 - **Frontier query**: `glab issue list -F json` scoped to the map's children, drop any with an open blocker: a native `blocked_by` link to an open issue (`glab api projects/:id/issues/:iid/links`), or an open issue in the `Blocked by` line, or an assignee; first in map order wins.
 - **Claim**: `glab issue update <n> --assignee @me`, the session's first write.
 - **Resolve**: `glab issue note <n> --message "<answer>"`, then `glab issue close <n>`, then append a context pointer (gist + link) to the map's Decisions-so-far.
+
+## Scripts
+
+A script written to carry out an issue, including a temporary script, goes in that issue project's `scripts/`. Use `.scratch/issues/<issue-slug>/scripts/` for an issue project and `.scratch/features/<issue-slug>/scripts/` for a feature project. A script for the application as a whole, such as a deploy script, goes in the application's `scripts/`.
