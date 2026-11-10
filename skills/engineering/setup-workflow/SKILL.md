@@ -1,6 +1,6 @@
 ---
 name: setup-workflow
-description: Configure this repo's issue tracker, triage labels, and domain docs, and keep that config local in .git/info/exclude. Run once before the other engineering skills.
+description: Configure this repo's issue tracker, triage labels, and domain docs, and record that a historical design choice lives only in an ADR. Keep that config local in .git/info/exclude. Run once before the other engineering skills.
 disable-model-invocation: true
 ---
 
@@ -11,6 +11,7 @@ Scaffold the per-repo configuration that the engineering skills assume:
 - **Issue tracker**: where issues live (GitHub by default; local markdown is also supported out of the box)
 - **Triage labels**: the strings used for the five canonical triage roles
 - **Domain docs**: where `CONTEXT.md` and ADRs live, and the consumer rules for reading them
+- **Current behavior**: fixed text in the root agent file, in step 4.
 
 This is a prompt-driven skill, not a deterministic script. Explore, present what you found, confirm with the user, then write.
 
@@ -21,7 +22,7 @@ This is a prompt-driven skill, not a deterministic script. Explore, present what
 Look at the current repo to understand its starting state. Read whatever exists; don't assume:
 
 - `git remote -v` and `.git/config`: is this a GitHub repo? Which one?
-- `AGENTS.md` and `CLAUDE.md` at the repo root: does either exist? Does either already have `## Issue tracker`, `## Triage labels`, or `## Domain docs`?
+- `AGENTS.md` and `CLAUDE.md` at the repo root: does either exist? Does either already have `## Issue tracker`, `## Triage labels`, `## Domain docs`, or `## Current behavior`? Note a `## Comments` section whose first line is "A comment says what the code does."
 - `CONTEXT.md` and `CONTEXT-MAP.md` at the repo root
 - `docs/adr/` and any `src/*/docs/adr/` directories
 - `docs/agents/`: does this skill's prior output already exist?
@@ -65,7 +66,7 @@ Record the layout in `docs/agents/domain.md`.
 
 Show the user a draft of:
 
-- The `## Issue tracker`, `## Triage labels`, and `## Domain docs` sections to add to whichever of `CLAUDE.md` / `AGENTS.md` is being edited (see step 4 for selection rules)
+- The `## Issue tracker`, `## Triage labels`, `## Domain docs`, and `## Current behavior` sections to add to whichever of `CLAUDE.md` / `AGENTS.md` is being edited (see step 4 for selection rules)
 - The contents of `docs/agents/issue-tracker.md`, `docs/agents/domain.md`, and `docs/agents/triage-labels.md`
 
 Let them edit before writing.
@@ -80,7 +81,11 @@ Let them edit before writing.
 
 Never create `AGENTS.md` when `CLAUDE.md` already exists (or vice versa); always edit the one that's already there.
 
-If `## Issue tracker`, `## Triage labels`, or `## Domain docs` already exists in the chosen file, update that section in-place rather than appending a duplicate. Don't overwrite user edits to the surrounding sections.
+If `## Issue tracker`, `## Triage labels`, `## Domain docs`, or `## Current behavior` already exists in the chosen file, update that section in-place rather than appending a duplicate. Don't overwrite user edits to the surrounding sections.
+
+If a `## Comments` section starts with "A comment says what the code does.", replace that section with `## Current behavior`.
+
+`## Current behavior` is fixed text. Write it every time, from the block below.
 
 The sections:
 
@@ -96,6 +101,10 @@ The sections:
 ## Domain docs
 
 [one-line summary of layout: "single-context" or "multi-context"]. When exploring the codebase or naming a domain concept, read `docs/agents/domain.md` and follow it.
+
+## Current behavior
+
+Comments, documentation, and issue tracking state the behavior they describe. The only glimpse of a historical design choice is in an ADR.
 ```
 
 Then write the docs files using the seed templates in this skill folder as a starting point:
